@@ -6,13 +6,14 @@ def isJPG(f : File) = {
 }
 
 def newname(d: File,f: File) = {
-    val newPath = d.getName() + File.separator + f.getName()
-    val p = new File(newPath)
-    p
+  val newPath = "./res/" + d.getName() + "_" + f.getName()
+  println(newPath)
+  val p = new File(newPath)
+  p
 }
 
-def copyfile(tup: Tuple2[File,File]) = {
-    println ("copying " + tup._1.getName() + " to " + tup._2.getName() )
+def copyfile(oldf: File, newf: File) = {
+  println ("copying " + oldf.getPath() + " to " + newf.getPath() )
 }
 
 def dodir(d: File) = {
@@ -22,8 +23,11 @@ def dodir(d: File) = {
     val newnames = l.map(f => newname(d,f));
     // concat with File.separator
     val jobs = l zip newnames;
+    println(jobs)
     // hand off to copier
-    jobs.map(x: Tuple2[File] => copyfile(x));
+    for ((oldf, newf) <- jobs) {
+    	copyfile(oldf, newf)
+    }
 }
 
 def fl(path: String = ".") = {
