@@ -1,8 +1,9 @@
 import java.io.File
+import sys.process._
 
 def isJPG(f : File) = {
-    val jpgPat = "JPG".r
-    jpgPat.findFirstIn(f.getName()).isDefined
+  val jpgPat = "JPG".r
+  jpgPat.findFirstIn(f.getName()).isDefined
 }
 
 def newname(d: File,f: File) = {
@@ -13,26 +14,28 @@ def newname(d: File,f: File) = {
 }
 
 def copyfile(oldf: File, newf: File) = {
-  println ("copying " + oldf.getPath() + " to " + newf.getPath() )
+  //println ("copying " + oldf.getPath() + " to " + newf.getPath() )
+  val cmd = "cp " + oldf.getPath() + " " + newf.getPath()
+  println(cmd)
+  cmd.!
 }
 
 def dodir(d: File) = {
-    // check for JPGs
-    val l = d.listFiles.filter(isJPG)
-    // create new name
-    val newnames = l.map(f => newname(d,f));
-    // concat with File.separator
-    val jobs = l zip newnames;
-    println(jobs)
-    // hand off to copier
-    for ((oldf, newf) <- jobs) {
-    	copyfile(oldf, newf)
-    }
+  // check for JPGs
+  val l = d.listFiles.filter(isJPG)
+  // create new name
+  val newnames = l.map(f => newname(d,f));
+  val jobs = l zip newnames;
+  println(jobs)
+  // hand off to copier
+  for ((oldf, newf) <- jobs) {
+    copyfile(oldf, newf)
+  }
 }
 
 def fl(path: String = ".") = {
-    val f = new File(path);
-    val l = f.listFiles.filter(_.isDirectory);
-    l.map(dodir)
+  val f = new File(path);
+  val l = f.listFiles.filter(_.isDirectory);
+  l.map(dodir)
 }
 
