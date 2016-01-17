@@ -1,14 +1,15 @@
 import java.io.File
 import sys.process._
 
-def isJPG(f : File) = {
-  val jpgPat = "JPG".r
-  jpgPat.findFirstIn(f.getName()).isDefined
+def isPhoto(f : File) = {
+  val isjpg = "JPG".r.findFirstIn(f.getName()).isDefined
+  val ispng = "PNG".r.findFirstIn(f.getName()).isDefined
+  isjpg | ispng
 }
 
 def newname(d: File,f: File) = {
   val newPath = "./res/" + d.getName() + "_" + f.getName()
-  println(newPath)
+  // println(newPath)
   val p = new File(newPath)
   p
 }
@@ -22,7 +23,7 @@ def copyfile(oldf: File, newf: File) = {
 
 def dodir(d: File) = {
   // check for JPGs
-  val l = d.listFiles.filter(isJPG)
+  val l = d.listFiles.filter(isPhoto)
   // create new name
   val newnames = l.map(f => newname(d,f));
   val jobs = l zip newnames;
